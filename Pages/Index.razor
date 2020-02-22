@@ -44,7 +44,16 @@ else
     <input type="button" data-toggle="modal" data-target="#personModal" class="btn btn-primary" value="Add Person" @onclick="(InitializePerson)" />
 </div>
 
-<ConfirmDialog OnClick="@Delete" />
+<br/>
+
+<div class="card">
+    <div class="card-body">
+        <p class="text-info">Click Submit to add these people to Stratum</p>
+        <input type="button" class="btn btn-lg btn-warning" value="Submit" @onclick="(SubmitListAsync)"/>
+    </div>
+</div>
+
+<ConfirmDialog OnClick="@DeleteAsync" />
 <PersonDetail Person=_person DataChanged="@DataChanged">
     <CustomHeader>@_customHeader</CustomHeader>
 </PersonDetail>
@@ -76,7 +85,7 @@ else
         _person = person;
     }
 
-    private async Task Delete()
+    private async Task DeleteAsync()
     {
         var task = await _service.Delete(_person.Id);
         await jsRuntime.InvokeAsync<object>("CloseModal", "confirmDeleteModal");
@@ -89,4 +98,12 @@ else
         _personList = await _service.GetAll();
         StateHasChanged();
     }
+
+    private async Task SubmitListAsync()
+    {
+        await _service.SubmitList();
+        _personList = await _service.GetAll();
+        _person = new Person();
+    }
+
 }

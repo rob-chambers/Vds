@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vds.Data;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace Vds.Services
         Task<Person> Add(Person person);
         Task<Person> Update(Person person);
         Task<Person> Delete(string id);
+        Task SubmitList();
     }
 
     public class PersonService : IPersonService
@@ -54,6 +56,18 @@ namespace Vds.Services
             _context.People.Remove(person);
             await _context.SaveChangesAsync();
             return person;
+        }
+
+        public async Task SubmitList()
+        {
+            // Simulate a status update
+            var r = new Random();
+            foreach (var person in await GetAll())
+            {
+                var number = r.Next(4);
+                person.Status = (PersonStatus) number;
+                await Update(person);
+            }
         }
     }
 }
