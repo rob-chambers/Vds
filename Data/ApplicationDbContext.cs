@@ -9,13 +9,7 @@ namespace Vds.Data
             : base(options)
         {
         }
-        public DbSet<ToDo> ToDoList { get; set; }
 
         public DbSet<Person> People { get; set; }
-
-        public override int SaveChanges()
-        {
-            return base.SaveChanges();
-        }
     }
 }

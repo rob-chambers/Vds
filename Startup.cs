@@ -30,18 +30,12 @@ namespace Vds
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddHttpClient<ApiService>(client =>
-            {
-                client.BaseAddress = new Uri("http://localhost");
-            });
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            services.AddSingleton<WeatherForecastService>();
-            services.AddTransient<IToDoListService, ToDoListService>();
             services.AddTransient<IPersonService, PersonService>();
         }
 
