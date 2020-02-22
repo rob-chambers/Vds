@@ -11,9 +11,7 @@ namespace Vds.Data
         }
         public DbSet<ToDo> ToDoList { get; set; }
 
-        public DbSet<Category> Categories { get; set; }
-
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Person> People { get; set; }
 
         public override int SaveChanges()
         {

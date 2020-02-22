@@ -42,7 +42,7 @@ namespace Vds
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
             services.AddTransient<IToDoListService, ToDoListService>();
-            services.AddTransient<ICascadingDropdownService, CascadingDropdownService>();
+            services.AddTransient<IPersonService, PersonService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,7 +95,7 @@ namespace Vds
                 }
             }
 
-            IdentityUser user = await UserManager.FindByEmailAsync("admin@blogofpi.com");
+            var user = await UserManager.FindByEmailAsync("admin@blogofpi.com");
 
             if (user == null)
             {
@@ -109,7 +109,7 @@ namespace Vds
             await UserManager.AddToRoleAsync(user, "Admin");
 
 
-            IdentityUser user1 = await UserManager.FindByEmailAsync("jane.doe@blogofpi.com");
+            var user1 = await UserManager.FindByEmailAsync("jane.doe@blogofpi.com");
 
             if (user1 == null)
             {

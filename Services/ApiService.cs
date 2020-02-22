@@ -7,7 +7,7 @@ namespace Vds.Services
 {
     public class ApiService
     {
-        public HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
         public ApiService(HttpClient client)
         {
