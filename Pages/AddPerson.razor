@@ -1,0 +1,69 @@
+﻿@using Vds.Data 
+@using Vds.Services
+@inject IPersonService _service
+@inject IJSRuntime jsRuntime
+
+<EditForm Model="@Person" OnValidSubmit="@HandleValidSubmitAsync" Context="formContext">
+    <DataAnnotationsValidator />
+    @*<ValidationSummary />*@
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="hidden" @bind-value="@Person.Id" />
+        <InputText id="firstName" class="form-control" @bind-Value="@Person.FirstName" />
+        <ValidationMessage For="@(() => Person.FirstName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <InputText id="lastName" class="form-control" @bind-Value="@Person.LastName" />
+        <ValidationMessage For="@(() => Person.LastName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="@Person.Email" />
+        <ValidationMessage For="@(() => Person.Email)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">@SubmitButtonCaption</button>
+    <button type="button" class="btn btn-secondary" @onclick="(() => Clear())" >Clear</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Action DataChanged { get; set; }
+
+    [Parameter]
+    public Person Person { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        Person = new Person();
+        return Task.CompletedTask;
+    }
+
+    private async void HandleValidSubmitAsync()
+    {
+        if (string.IsNullOrEmpty(Person.Id))
+        {
+            Person.Id = Guid.NewGuid().ToString();
+            await _service.Add(Person);
+        }
+        else
+        {
+            Person = await _service.Update(Person);
+            Person = new Person();
+        }
+
+        StateHasChanged();
+        DataChanged?.Invoke();
+    }
+
+    private void Clear()
+    {
+        Person = new Person();
+        StateHasChanged();
+    }
+
+    private string SubmitButtonCaption => string.IsNullOrEmpty(Person.Id) ? "Add" : "Update";
+}

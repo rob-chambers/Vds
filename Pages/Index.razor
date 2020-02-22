@@ -13,36 +13,45 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var person in _personList)
-            {
+    <div class="row">
+        <div class="col-lg-8">
+            <table class="table">
+                <thead>
                 <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var person in _personList)
+                {
+                    <tr>
                     <td>@person.FirstName</td>
                     <td>@person.LastName</td>
                     <td>@person.Email</td>
                     <td>@person.Status</td>
                     <td>
-                        <input type="button" class="btn btn-primary" @onclick="(() => PrepareForEdit(person))" data-toggle="modal" data-target="#personModal" value="Edit"/>
-                        <input type="button" class="btn btn-danger" @onclick="(() => PrepareForDelete(person))" data-toggle="modal" data-target="#confirmDeleteModal" value="Delete" />
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    <input type="button" class="btn btn-primary" @onclick="(() => PrepareForEdit(person))" value="Edit" />
+                    <input type="button" class="btn btn-danger" @onclick="(() => PrepareForDelete(person))" data-toggle="modal" data-target="#confirmDeleteModal" value="Delete" />
+                                                                                                                                                                                </td>
+                                                                                                                                                                                </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        
+        
+        <div class="col-lg-4">
+            <AddPerson DataChanged="@DataChanged" Person=_person />
+        </div>
+    </div>
 }
-<div>
+@*<div>
     <input type="button" data-toggle="modal" data-target="#personModal" class="btn btn-primary" value="Add Person" @onclick="(InitializePerson)" />
-</div>
+</div>*@
 
 <br/>
 
@@ -54,9 +63,9 @@ else
 </div>
 
 <ConfirmDialog OnClick="@DeleteAsync" />
-<PersonDetail Person=_person DataChanged="@DataChanged">
+@*<PersonDetail Person=_person DataChanged="@DataChanged">
     <CustomHeader>@_customHeader</CustomHeader>
-</PersonDetail>
+</PersonDetail>*@
 
 @code {
     private List<Person> _personList;
