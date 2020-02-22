@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BlazorApp.Data;
+using Vds.Data;
 
-namespace BlazorApp.Controllers
+namespace Vds.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

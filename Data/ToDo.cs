@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorApp.Data
+namespace Vds.Data
 {
     public class ToDo
     {

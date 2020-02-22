@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlazorApp.Data;
+using Vds.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp.Services
+namespace Vds.Services
 {
     public interface IToDoListService
     {

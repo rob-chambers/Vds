@@ -1,9 +1,9 @@
-﻿using BlazorApp.Data;
+﻿using Vds.Data;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace BlazorApp.Services
+namespace Vds.Services
 {
     public class ApiService
     {

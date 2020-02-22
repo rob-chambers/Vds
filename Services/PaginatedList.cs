@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorApp.Services
+namespace Vds.Services
 {
     public class PaginatedList<T>
     {

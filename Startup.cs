@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BlazorApp.Areas.Identity;
-using BlazorApp.Data;
-using BlazorApp.Services;
+using Vds.Areas.Identity;
+using Vds.Data;
+using Vds.Services;
 
-namespace BlazorApp
+namespace Vds
 {
     public class Startup
     {

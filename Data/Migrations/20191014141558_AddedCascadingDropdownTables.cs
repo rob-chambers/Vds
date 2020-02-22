@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BlazorApp.Data.Migrations
+namespace Vds.Data.Migrations
 {
     public partial class AddedCascadingDropdownTables : Migration
     {

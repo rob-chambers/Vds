@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BlazorApp.Data;
+using Vds.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp.Services
+namespace Vds.Services
 {
     public interface ICascadingDropdownService
     {

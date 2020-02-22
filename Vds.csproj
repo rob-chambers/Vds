@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UserSecretsId>aspnet-BlazorApp-1F527F84-3BAB-44C2-A0A9-9F4E175E1E0A</UserSecretsId>
+    <UserSecretsId>aspnet-Vds-1F527F84-3BAB-44C2-A0A9-9F4E175E1E0A</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
