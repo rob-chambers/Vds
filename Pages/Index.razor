@@ -2,6 +2,7 @@
 
 @using Vds.Data
 @using Vds.Services
+@using Vds.Pages
 @inject IPersonService _service
 @inject IJSRuntime jsRuntime
 
@@ -45,7 +46,7 @@ else
         
         
         <div class="col-lg-4">
-            <AddPerson DataChanged="@DataChanged" Person=_person />
+            <AddEditPerson DataChanged="@DataChanged" Person=_person />
         </div>
     </div>
 }
@@ -96,7 +97,7 @@ else
 
     private async Task DeleteAsync()
     {
-        var task = await _service.Delete(_person.Id);
+        var task = await _service.Delete(_person.Id.Value);
         await jsRuntime.InvokeAsync<object>("CloseModal", "confirmDeleteModal");
         _personList = await _service.GetAll();
         _person = new Person();

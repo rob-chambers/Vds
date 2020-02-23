@@ -66,9 +66,9 @@
 
     private async void HandleValidSubmit()
     {
-        if (string.IsNullOrEmpty(Person.Id))
+        if (!Person.Id.HasValue)
         {
-            Person.Id = Guid.NewGuid().ToString();
+            Person.Id = Guid.NewGuid();
             await _service.Add(Person);
         }
         else

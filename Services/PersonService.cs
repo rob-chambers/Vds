@@ -9,10 +9,10 @@ namespace Vds.Services
     public interface IPersonService
     {
         Task<List<Person>> GetAll();
-        Task<Person> GetById(string id);
+        Task<Person> GetById(Guid id);
         Task<Person> Add(Person person);
         Task<Person> Update(Person person);
-        Task<Person> Delete(string id);
+        Task<Person> Delete(Guid id);
         Task SubmitList();
     }
 
@@ -30,7 +30,7 @@ namespace Vds.Services
             return await _context.People.ToListAsync();
         }
 
-        public async Task<Person> GetById(string id)
+        public async Task<Person> GetById(Guid id)
         {
             var person = await _context.People.FindAsync(id);
             return person;
@@ -50,7 +50,7 @@ namespace Vds.Services
             return person;
         }
 
-        public async Task<Person> Delete(string id)
+        public async Task<Person> Delete(Guid id)
         {
             var person = await _context.People.FindAsync(id);
             _context.People.Remove(person);

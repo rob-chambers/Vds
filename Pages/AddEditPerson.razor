@@ -47,9 +47,9 @@
 
     private async void HandleValidSubmitAsync()
     {
-        if (string.IsNullOrEmpty(Person.Id))
+        if (!Person.Id.HasValue)
         {
-            Person.Id = Guid.NewGuid().ToString();
+            Person.Id = Guid.NewGuid();
             await _service.Add(Person);
         }
         else
@@ -75,5 +75,5 @@
         await jsRuntime.InvokeVoidAsync("focusElement", "firstName");
     }
 
-    private string SubmitButtonCaption => string.IsNullOrEmpty(Person.Id) ? "Add" : "Update";
+    private string SubmitButtonCaption => Person.Id.HasValue ? "Update" : "Add";
 }
