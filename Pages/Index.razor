@@ -14,55 +14,60 @@
 }
 else
 {
-    <div class="row">
-        <InputFile OnChange="HandleFileSelected" />
-
-        @if (_file != null)
-        {
-            <p>Number of lines in file: @_numLines</p>
-            <button class="btn btn-secondary" @onclick="Upload">Upload</button>
-        }
-    </div>
-
-    <div class="row">
-        <button @onclick="@ToggleShowInvalidOnly">@ButtonCaption</button>
-    </div>
-
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-8">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var person in _personList)
-                        {
-                            <tr>
-                                <td>@person.FirstName</td>
-                                <td>@person.LastName</td>
-                                <td>@person.Email</td>
-                                <td>@person.Status</td>
-                                <td>
-                                    <input type="button" class="btn btn-primary" @onclick="(() => PrepareForEdit(person))" value="Edit" />
-                                    <input type="button" class="btn btn-danger" @onclick="(() => PrepareForDelete(person))" data-toggle="modal" data-target="#confirmDeleteModal" value="Delete" />
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="col-sm-4">
+                <InputFile OnChange="HandleFileSelected" />
+
+                @if (_file != null)
+                {
+                    <p>Number of lines in file: @_numLines</p>
+                    <button class="btn btn-secondary" @onclick="Upload">Upload</button>
+                }
             </div>
 
-            <div class="col-lg-4">
+            <div class="offset-sm-3">
+                <button class="btn btn-secondary" @onclick="@ToggleShowInvalidOnly">@ButtonCaption</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-9">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var person in _personList)
+                {
+                    <tr>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.Email</td>
+                    <td><span class="badge badge-pill @GetBadgeForStatus(person.Status)">@person.Status</span></td>
+                    <td>
+                    <input type="button" class="btn btn-sm btn-primary" @onclick="(() => PrepareForEdit(person))" value="Edit" />
+                    <input type="button" class="btn btn-sm btn-danger" @onclick="(() => PrepareForDelete(person))" data-toggle="modal" data-target="#confirmDeleteModal" value="Delete" />
+                                                                                                                                                                                </td>
+                                                                                                                                                                                </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+            <div class="col-sm-3">
                 <AddEditPerson DataChanged="@DataChanged" Person=_person />
             </div>
         </div>
-        }
+    
+    </div>
+    }
         @*<div>
                 <input type="button" data-toggle="modal" data-target="#personModal" class="btn btn-primary" value="Add Person" @onclick="(InitializePerson)" />
             </div>*@
@@ -83,82 +88,100 @@ else
 
         @code {
             private List<Person> _personList;
-            private Person _person = new Person();
-            private Person _personForDeletion = new Person();
-            private string _customHeader = string.Empty;
-            private IFileListEntry _file;
-            private int _numLines;
+        private Person _person = new Person();
+        private Person _personForDeletion = new Person();
+        private string _customHeader = string.Empty;
+        private IFileListEntry _file;
+        private int _numLines;
 
-            private bool _showInvalidOnly;
+        private bool _showInvalidOnly;
 
-            private async Task ToggleShowInvalidOnly()
+        private async Task ToggleShowInvalidOnly()
+        {
+            _showInvalidOnly = !_showInvalidOnly;
+            _personList = _showInvalidOnly ? await _service.GetAllInvalid() : await _service.GetAll();
+            StateHasChanged();
+        }
+
+        private string ButtonCaption => _showInvalidOnly ? "Show All" : "Show Invalid People Only";
+
+        protected override async Task OnInitializedAsync()
+        {
+            _personList = await _service.GetAll();
+        }
+
+        private void InitializePerson()
+        {
+            _person = new Person();
+            _customHeader = "Add Person";
+        }
+
+        private void PrepareForEdit(Person person)
+        {
+            _customHeader = "Edit Person";
+            _person = person;
+        }
+
+        private void PrepareForDelete(Person person)
+        {
+            _personForDeletion = person;
+        }
+
+        private async Task DeleteAsync()
+        {
+            var task = await _service.Delete(_personForDeletion.Id.GetValueOrDefault());
+            await jsRuntime.InvokeAsync<object>("CloseModal", "confirmDeleteModal");
+            _personList = await _service.GetAll();
+            _person = new Person();
+        }
+
+        private async void DataChanged()
+        {
+            _personList = await _service.GetAll();
+            StateHasChanged();
+        }
+
+        private async Task SubmitListAsync()
+        {
+            await _service.SubmitList();
+            _personList = await _service.GetAll();
+            _person = new Person();
+        }
+
+        private bool CannotSubmit => _personList == null || !_personList.Any();
+
+        void HandleFileSelected(IFileListEntry[] files)
+        {
+            _file = files.FirstOrDefault();
+        }
+
+        private async Task Upload()
+        {
+            _numLines = 0;
+            using (var reader = new System.IO.StreamReader(_file.Data))
             {
-                _showInvalidOnly = !_showInvalidOnly;
-                _personList = _showInvalidOnly ? await _service.GetAllInvalid() : await _service.GetAll();
-                StateHasChanged();
-            }
-
-            private string ButtonCaption => _showInvalidOnly ? "Show All" : "Show Invalid People Only";
-
-            protected override async Task OnInitializedAsync()
-            {
-                _personList = await _service.GetAll();
-            }
-
-            private void InitializePerson()
-            {
-                _person = new Person();
-                _customHeader = "Add Person";
-            }
-
-            private void PrepareForEdit(Person person)
-            {
-                _customHeader = "Edit Person";
-                _person = person;
-            }
-
-            private void PrepareForDelete(Person person)
-            {
-                _personForDeletion = person;
-            }
-
-            private async Task DeleteAsync()
-            {
-                var task = await _service.Delete(_personForDeletion.Id.GetValueOrDefault());
-                await jsRuntime.InvokeAsync<object>("CloseModal", "confirmDeleteModal");
-                _personList = await _service.GetAll();
-                _person = new Person();
-            }
-
-            private async void DataChanged()
-            {
-                _personList = await _service.GetAll();
-                StateHasChanged();
-            }
-
-            private async Task SubmitListAsync()
-            {
-                await _service.SubmitList();
-                _personList = await _service.GetAll();
-                _person = new Person();
-            }
-
-            private bool CannotSubmit => _personList == null || !_personList.Any();
-
-            void HandleFileSelected(IFileListEntry[] files)
-            {
-                _file = files.FirstOrDefault();
-            }
-
-            private async Task Upload()
-            {
-                _numLines = 0;
-                using (var reader = new System.IO.StreamReader(_file.Data))
+                while (await reader.ReadLineAsync() != null)
                 {
-                    while (await reader.ReadLineAsync() != null)
-                    {
-                        _numLines++;
-                    }
+                    _numLines++;
                 }
             }
+        }
+
+        private static string GetBadgeForStatus(PersonStatus status)
+        {
+            switch (status)
+            {
+                case PersonStatus.New:
+                    return "badge-primary";
+                case PersonStatus.Complete:
+                    return "badge-success";
+                case PersonStatus.Invalid:
+                    return "badge-danger";
+                case PersonStatus.PendingProcessing:
+                    return "badge-info";
+            }
+
+            return "badge-info";
+        }
+
         }
