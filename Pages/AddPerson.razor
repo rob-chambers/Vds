@@ -34,6 +34,9 @@
     public Action DataChanged { get; set; }
 
     [Parameter]
+    public Action ShouldResetFocus { get; set; }
+
+    [Parameter]
     public Person Person { get; set; }
 
     protected override Task OnInitializedAsync()
@@ -57,12 +60,19 @@
 
         StateHasChanged();
         DataChanged?.Invoke();
+        ResetFocus();
     }
 
     private void Clear()
     {
         Person = new Person();
         StateHasChanged();
+        ResetFocus();
+    }
+
+    private async void ResetFocus()
+    {
+        await jsRuntime.InvokeVoidAsync("focusElement", "firstName");
     }
 
     private string SubmitButtonCaption => string.IsNullOrEmpty(Person.Id) ? "Add" : "Update";

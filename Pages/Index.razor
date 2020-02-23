@@ -58,7 +58,7 @@ else
 <div class="card">
     <div class="card-body">
         <p class="text-info">Click Submit to add these people to Stratum</p>
-        <input type="button" class="btn btn-lg btn-warning" value="Submit" @onclick="(SubmitListAsync)"/>
+        <input type="button" class="btn btn-lg btn-warning" value="Submit" @onclick="(SubmitListAsync)" disabled="@CannotSubmit"/>
     </div>
 </div>
 
@@ -115,4 +115,5 @@ else
         _person = new Person();
     }
 
+    private bool CannotSubmit => _personList == null || !_personList.Any();
 }
