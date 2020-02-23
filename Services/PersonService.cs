@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Vds.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace Vds.Services
     public interface IPersonService
     {
         Task<List<Person>> GetAll();
+        Task<List<Person>> GetAllInvalid();
         Task<Person> GetById(Guid id);
         Task<Person> Add(Person person);
         Task<Person> Update(Person person);
@@ -28,6 +30,11 @@ namespace Vds.Services
         public async Task<List<Person>> GetAll()
         {
             return await _context.People.ToListAsync();
+        }
+
+        public async Task<List<Person>> GetAllInvalid()
+        {
+            return await _context.People.Where(p => p.Status == PersonStatus.Invalid).ToListAsync();
         }
 
         public async Task<Person> GetById(Guid id)
