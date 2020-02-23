@@ -47,6 +47,10 @@
 
     private async void HandleValidSubmitAsync()
     {
+        Person.FirstName = Person.FirstName.Trim();
+        Person.LastName = Person.LastName.Trim();
+        Person.Email = Person.Email.Trim();
+
         if (!Person.Id.HasValue)
         {
             Person.Id = Guid.NewGuid();
